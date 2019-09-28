@@ -1,0 +1,9 @@
+[
+  {
+    "artifact": "frcJava (in project ArcadeDrive_ArbFeedForward)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "ArcadeDrive_ArbFeedForward",
+    "language": "java"
+  }
+]
