@@ -47,6 +47,8 @@ public class Robot extends TimedRobot {
 	boolean m_2togglePressed = false;
 	double m_valueH = 0;
 
+	int m_autoMode = 1;
+
 //	UsbCamera m_camera = new UsbCamera("Camera 0", 0);
 //	MjpegServer m_server = new MjpegServer("server 0", 5800);
 
@@ -136,8 +138,7 @@ public class Robot extends TimedRobot {
 		return 0;
 	}
 
-	public void updateToggle()
-    {
+	public void updateToggle(){
         if(_gamepad.getRawButton(3)){
             if(!togglePressed){
                 toggleOn = !toggleOn;
@@ -165,6 +166,27 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Set Speed", _gamepad.getRawAxis(2));
 		SmartDashboard.putNumber("Angle", m_navx.getAngle());
 		SmartDashboard.putNumber("Y Speed", m_navx.getVelocityY());
+	}
+
+	public void autonomousPeriodic(){
+		switch(m_autoMode){
+			case 0:
+				// Do nothing case
+
+				break;
+			case 1:
+				// Lauren's Auto
+
+				break;
+			case 2:
+				// Miles' Auto
+
+				break;
+			case 3:
+				// Zach's Auto
+
+				break;
+		}
 	}
 
 	double ramp(double joystick, double ramp, double historicalValue) {
