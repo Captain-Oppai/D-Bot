@@ -66,6 +66,8 @@ public class Robot extends TimedRobot {
 		_leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
 		_rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder,0,0);
 
+		m_navx.reset();
+
 //		String[] server = {"http://10.9.57.2:5800/stream.mjpg"};
 
 /*		NetworkTableInstance.getDefault()
@@ -79,17 +81,18 @@ public class Robot extends TimedRobot {
 	
 	@Override
 	public void teleopInit(){
-		/* Ensure motor output is neutral during init */
-		_leftMaster.set(ControlMode.PercentOutput, 0);
-		_rightMaster.set(ControlMode.PercentOutput, 0);
-		_leftSlave.set(ControlMode.PercentOutput, 0);
-		_rightSlave.set(ControlMode.PercentOutput, 0);
 
 		/* Factory Default all hardware to prevent unexpected behaviour */
 		_leftMaster.configFactoryDefault();
 		_rightMaster.configFactoryDefault();
 		_leftSlave.configFactoryDefault();
 		_rightSlave.configFactoryDefault();
+
+		/* Ensure motor output is neutral during init */
+		_leftMaster.set(ControlMode.PercentOutput, 0);
+		_rightMaster.set(ControlMode.PercentOutput, 0);
+		_leftSlave.set(ControlMode.Follower, _leftMaster.getDeviceID());
+		_rightSlave.set(ControlMode.Follower, _rightMaster.getDeviceID());	
 		
 		/* Set Neutral mode */
 		_leftMaster.setNeutralMode(NeutralMode.Brake);
@@ -108,6 +111,8 @@ public class Robot extends TimedRobot {
 	
 	@Override
 	public void teleopPeriodic() {
+
+		
 
 		/* Gamepad processing */
 		m_valueH = ramp(_gamepad.getRawAxis(1), 0.1, m_valueH);
@@ -181,6 +186,8 @@ public class Robot extends TimedRobot {
 			case 2:
 				// Miles' Auto
 
+				driveStraight(90, 90, .5);
+
 				break;
 			case 3:
 				// Zach's Auto
@@ -194,4 +201,45 @@ public class Robot extends TimedRobot {
         double throtle = _gamepad.getRawAxis(2);
          return historicalValue - (historicalValue - joystickdeadband * throtle)*ramp;
   }
-}
+
+  double getHeading(){
+    return m_navx.getAngle();
+  }
+  public boolean driveStraight(int distance, double targetAngle, double speed){
+	  double turn = 0;
+	  
+
+	  if(targetAngle - 0.5 > getHeading()){
+		  turn = 0.05;
+	  }
+	  if(targetAngle + 0.5 < getHeading()){
+		turn = -0.05;
+	}
+	  if(getDistance() < distance){
+		_rightMaster.set(ControlMode.PercentOutput, speed - turn);
+		_leftMaster.set(ControlMode.PercentOutput, speed + turn);
+		return false;
+		  
+	  }else{
+		_rightMaster.set(ControlMode.PercentOutput, 0);
+		_leftMaster.set(ControlMode.PercentOutput, 0);
+		return true;
+
+	  }
+	  
+
+    
+  }
+  
+  double getDistance(){
+	  return (-_leftMaster.getSelectedSensorPosition() + _rightMaster.getSelectedSensorPosition())/2;
+  }
+
+  public void resetEncoders(){
+	  _leftMaster.setSelectedSensorPosition(0);
+	  _rightMaster.setSelectedSensorPosition(0);
+  }
+
+
+
+  }

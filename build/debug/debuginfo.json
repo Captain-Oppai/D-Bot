@@ -5,5 +5,12 @@
     "debugfile": "frcJava_roborio.debugconfig",
     "project": "ArcadeDrive_ArbFeedForward",
     "language": "java"
+  },
+  {
+    "artifact": "frcJava (in project D-Bot)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "D-Bot",
+    "language": "java"
   }
 ]
