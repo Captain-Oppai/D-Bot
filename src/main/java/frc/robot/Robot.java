@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
 	boolean m_2togglePressed = false;
 	double m_valueH = 0;
 
-	int m_autoMode = 1;
+	int m_autoMode = 2;
 
 //	UsbCamera m_camera = new UsbCamera("Camera 0", 0);
 //	MjpegServer m_server = new MjpegServer("server 0", 5800);
@@ -112,9 +112,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 
-		
+		/**
 
-		/* Gamepad processing */
+		// Gamepad processing
 		m_valueH = ramp(_gamepad.getRawAxis(1), 0.1, m_valueH);
 		double turn = _gamepad.getRawAxis(0);
 		turn = -1 * deadband(turn);
@@ -124,7 +124,8 @@ public class Robot extends TimedRobot {
     _rightMaster.set(ControlMode.PercentOutput, m_2Forward+m_2Turn);
 	_leftMaster.set(ControlMode.PercentOutput, m_2Forward-m_2Turn);
 	_rightSlave.set(ControlMode.PercentOutput, m_2Forward+m_2Turn);
-    _leftSlave.set(ControlMode.PercentOutput, m_2Forward-m_2Turn);
+	_leftSlave.set(ControlMode.PercentOutput, m_2Forward-m_2Turn);
+	*/
 //		updateToggle();
 
 	}
@@ -186,7 +187,7 @@ public class Robot extends TimedRobot {
 			case 2:
 				// Miles' Auto
 
-				driveStraight(90, 90, .5);
+				driveStraight(18, 90, .5);
 
 				break;
 			case 3:
@@ -205,9 +206,9 @@ public class Robot extends TimedRobot {
   double getHeading(){
     return m_navx.getAngle();
   }
-  public boolean driveStraight(int distance, double targetAngle, double speed){
+  public boolean driveStraight(int full_distance, double targetAngle, double speed){
 	  double turn = 0;
-	  
+	  double distance = full_distance * 54.324;
 
 	  if(targetAngle - 0.5 > getHeading()){
 		  turn = 0.05;
@@ -216,7 +217,7 @@ public class Robot extends TimedRobot {
 		turn = -0.05;
 	}
 	  if(getDistance() < distance){
-		_rightMaster.set(ControlMode.PercentOutput, speed - turn);
+		_rightMaster.set(ControlMode.PercentOutput, -speed + turn);
 		_leftMaster.set(ControlMode.PercentOutput, speed + turn);
 		return false;
 		  
